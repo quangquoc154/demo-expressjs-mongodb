@@ -1,6 +1,5 @@
 const Order = require("../models/order");
 const Product = require("../models/product");
-const User = require("../models/user");
 
 exports.getProducts = async (req, res, next) => {
   try {
@@ -9,6 +8,7 @@ exports.getProducts = async (req, res, next) => {
       prods: products,
       pageTitle: "All Products",
       path: "/products",
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
     console.log(error);
@@ -23,6 +23,7 @@ exports.getProduct = async (req, res, next) => {
       product: product,
       pageTitle: product.title,
       path: "/products",
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
     console.log(error);
@@ -36,6 +37,7 @@ exports.getIndex = async (req, res, next) => {
       prods: products,
       pageTitle: "Shop",
       path: "/",
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
     console.log(error);
@@ -83,7 +85,7 @@ exports.postOrder = async (req, res, next) => {
     const user = await req.user.populate("cart.items.productId");
     console.log(user.cart.items);
     const products = user.cart.items.map((i) => {
-      return { product: { ...i.productId._doc }, quantity: i.quantity};
+      return { product: { ...i.productId._doc }, quantity: i.quantity };
     });
     console.log(products);
 

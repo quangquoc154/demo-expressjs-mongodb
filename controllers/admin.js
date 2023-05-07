@@ -64,8 +64,7 @@ exports.postEditProduct = async (req, res, next) => {
     product.price = updatedPrice;
     product.description = updatedDescription;
     product.imageUrl = updatedImageUrl;
-    product.save();
-
+    await product.save();
     res.redirect("/admin/products");
   } catch (error) {
     console.log(error);
@@ -74,9 +73,9 @@ exports.postEditProduct = async (req, res, next) => {
 
 exports.getProducts = async (req, res, next) => {
   try {
-    const products = await Product.find()
-      // .select("title price -_id")
-      // .populate("userId", 'username');
+    const products = await Product.find();
+    // .select("title price -_id")
+    // .populate("userId", 'username');
     // console.log(products);
     res.render("admin/products", {
       prods: products,

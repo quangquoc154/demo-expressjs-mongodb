@@ -42,8 +42,10 @@ form {
 
 .main-header__nav {
   height: 100%;
-  display: none;
+  width: 100%;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .main-header__item-list {
@@ -58,14 +60,21 @@ form {
   padding: 0;
 }
 
-.main-header__item a {
+.main-header__item a,
+.main-header__item button {
+  font: inherit;
+  background: transparent;
+  border: none;
   text-decoration: none;
   color: white;
+  cursor: pointer;
 }
 
 .main-header__item a:hover,
 .main-header__item a:active,
-.main-header__item a.active {
+.main-header__item a.active,
+.main-header__item button:hover,
+.main-header__item button:active {
   color: #ffeb3b;
 }
 
@@ -169,12 +178,23 @@ form {
   margin: 0;
 }
 
+.card__content p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 25px;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
 .card__image {
   width: 100%;
 }
 
 .card__image img {
   width: 100%;
+  min-height: 450px;
+  background-size: cover;
 }
 
 .card__actions {
@@ -216,6 +236,22 @@ form {
   color: white;
 }
 
+.user-message {
+  margin: auto;
+  width: 90%;
+  border: 1px solid #4771fa;
+  padding: 0.5rem;
+  border-radius: 3px;
+  text-align: center;
+  background-color: #8ea8fd;
+}
+
+.user-message--error {
+  color: red;
+  border-color: red;
+  background-color: #fb8f8f;
+}
+
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;
@@ -223,5 +259,10 @@ form {
 
   #side-menu-toggle {
     display: none;
+  }
+
+  .user-message {
+    margin: auto;
+    width: 30rem;
   }
 }
