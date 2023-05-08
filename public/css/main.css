@@ -236,6 +236,11 @@ form {
   color: white;
 }
 
+.username {
+  color: #1abaa7;
+  padding-right: 2px;
+}
+
 .user-message {
   margin: auto;
   width: 90%;
@@ -250,6 +255,12 @@ form {
   color: red;
   border-color: red;
   background-color: #fb8f8f;
+}
+
+.user-message--success {
+  color: #fff;
+  border-color: #008000;
+  background-color: #008000;
 }
 
 @media (min-width: 768px) {
