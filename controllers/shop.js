@@ -11,7 +11,9 @@ exports.getProducts = async (req, res, next) => {
       isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -26,7 +28,9 @@ exports.getProduct = async (req, res, next) => {
       isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -40,7 +44,9 @@ exports.getIndex = async (req, res, next) => {
       isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -55,7 +61,9 @@ exports.getCart = async (req, res, next) => {
       pageTitle: "Your Cart",
     });
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -66,7 +74,9 @@ exports.postCart = async (req, res, next) => {
     console.log(result);
     res.redirect("/cart");
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -76,7 +86,9 @@ exports.postCartDeleteItem = async (req, res, next) => {
     await req.user.removeFormCart(prodId);
     res.redirect("/cart");
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -100,7 +112,9 @@ exports.postOrder = async (req, res, next) => {
     await req.user.clearCart();
     res.redirect("/orders");
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -113,6 +127,8 @@ exports.getOrders = async (req, res, next) => {
       orders: orders,
     });
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };

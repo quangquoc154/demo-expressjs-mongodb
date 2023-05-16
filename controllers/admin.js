@@ -1,3 +1,4 @@
+const { validationResult } = require("express-validator");
 const Product = require("../models/product");
 
 exports.getAddProduct = (req, res, next) => {
@@ -5,6 +6,9 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
+    hasErrors: false,
+    errorMessage: null,
+    validationErrors: [],
   });
 };
 
@@ -14,6 +18,23 @@ exports.postAddProduct = async (req, res, next) => {
   const description = req.body.description;
   const imageUrl = req.body.imageUrl;
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).render("admin/edit-product", {
+        pageTitle: "Add Product",
+        path: "/admin/add-product",
+        editing: false,
+        hasErrors: true,
+        errorMessage: errors.array()[0].msg,
+        product: {
+          title: title,
+          price: price,
+          description: description,
+          imageUrl: imageUrl,
+        },
+        validationErrors: errors.array(),
+      });
+    }
     const product = new Product({
       title: title,
       price: price,
@@ -24,7 +45,24 @@ exports.postAddProduct = async (req, res, next) => {
     await product.save();
     res.redirect("/");
   } catch (error) {
-    console.log(error);
+    // res.redirect("/500");
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
+    // return res.status(500).render("admin/edit-product", {
+    //   pageTitle: "Add Product",
+    //   path: "/admin/add-product",
+    //   editing: false,
+    //   hasErrors: true,
+    //   errorMessage: "Database operation failed, please try again.",
+    //   product: {
+    //     title: title,
+    //     price: price,
+    //     description: description,
+    //     imageUrl: imageUrl,
+    //   },
+    //   validationErrors: [],
+    // });
   }
 };
 
@@ -45,9 +83,14 @@ exports.getEditProduct = async (req, res, next) => {
       pageTitle: "Edit Product",
       path: "/admin/edit-product",
       editing: editMode,
+      hasErrors: false,
+      errorMessage: null,
+      validationErrors: [],
     });
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -58,6 +101,25 @@ exports.postEditProduct = async (req, res, next) => {
     const updatedPrice = req.body.price;
     const updatedDescription = req.body.description;
     const updatedImageUrl = req.body.imageUrl;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: true,
+        hasErrors: true,
+        errorMessage: errors.array()[0].msg,
+        validationErrors: errors.array(),
+        product: {
+          title: updatedTitle,
+          price: updatedPrice,
+          description: updatedDescription,
+          imageUrl: updatedImageUrl,
+          _id: prodId,
+        },
+      });
+    }
 
     const product = await Product.findById(prodId);
     if (product.userId.toString() !== req.user._id.toString()) {
@@ -70,7 +132,9 @@ exports.postEditProduct = async (req, res, next) => {
     await product.save();
     res.redirect("/admin/products");
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -86,7 +150,9 @@ exports.getProducts = async (req, res, next) => {
       path: "/admin/products",
     });
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
 
@@ -96,6 +162,8 @@ exports.postDeleteProduct = async (req, res, next) => {
     await Product.deleteOne({ _id: prodId, userId: req.user._id });
     res.redirect("/admin/products");
   } catch (error) {
-    console.log(error);
+    const err = new Error(error);
+    err.httpStatusCode = 500;
+    return next(err);
   }
 };
